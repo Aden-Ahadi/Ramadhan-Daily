@@ -31,7 +31,7 @@ export function Hero() {
               </h1>
               <p className="text-xl leading-relaxed tracking-tight text-muted-foreground max-w-md text-left">
                 Ready to unlock a month of{" "}
-                <AuroraText className="text-l font-semibold tracking-tighter md:text-5xl lg:text-xl">
+                <AuroraText className="text-l font-semibold tracking-tighter md:text-2xl lg:text-xl">
                   wonder
                 </AuroraText>
                 ? Dive into a world where everyday feels like a celebration.
@@ -48,17 +48,16 @@ export function Hero() {
             </div>
             <div className="flex flex-row gap-4">
               <Button size="lg" className="gap-4" variant="outline">
-                Jump on a call <PhoneCall className="w-4 h-4" />
+                btn <PhoneCall className="w-4 h-4" />
               </Button>
               <Button size="lg" className="gap-4">
-                Sign up here <MoveRight className="w-4 h-4" />
+                btn <MoveRight className="w-4 h-4" />
               </Button>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-8">
-            <div className="bg-muted rounded-md aspect-square"></div>
-            <div className="bg-muted rounded-md row-span-2"></div>
-            <div className="bg-muted rounded-md aspect-square"></div>
+          <div className="grid grid-cols-1 gap-8">
+            <div className="bg-muted rounded-md h-32"></div>
+            <div className="bg-muted rounded-md aspect-video"></div>
           </div>
         </div>
       </div>
