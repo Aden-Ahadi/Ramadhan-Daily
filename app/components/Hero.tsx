@@ -7,6 +7,7 @@ import { AuroraText } from "@/components/magicui/aurora-text";
 
 import { LineShadowText } from "@/components/magicui/line-shadow-text";
 import { useTheme } from "next-themes";
+import DailyVerse from "./DailyVerse";
 
 export function Hero() {
   const theme = useTheme();
@@ -57,7 +58,9 @@ export function Hero() {
           </div>
           <div className="grid grid-cols-1 gap-8">
             <div className="bg-muted rounded-md h-32"></div>
-            <div className="bg-muted rounded-md aspect-video"></div>
+            <div className="bg-muted rounded-md aspect-video">
+              <DailyVerse />
+            </div>
           </div>
         </div>
       </div>
