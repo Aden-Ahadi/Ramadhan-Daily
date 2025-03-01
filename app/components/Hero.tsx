@@ -8,6 +8,7 @@ import { LineShadowText } from "@/components/magicui/line-shadow-text";
 import { useTheme } from "next-themes";
 import DailyVerse from "./DailyVerse";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export function Hero() {
   const theme = useTheme();
@@ -117,9 +118,11 @@ export function Hero() {
               <Button size="lg" className="gap-4" variant="outline">
                 btn <PhoneCall className="w-4 h-4" />
               </Button>
-              <Button size="lg" className="gap-4">
-                btn <MoveRight className="w-4 h-4" />
-              </Button>
+              <Link href="/challenges">
+                <Button size="lg" className="gap-4">
+                  challenges <MoveRight className="w-4 h-4" />
+                </Button>
+              </Link>
             </div>
           </div>
 
