@@ -29,16 +29,29 @@ function getDayOfYear(date: Date): number {
   return Math.floor(diff / oneDay);
 }
 
+// Generate a pseudo-random number based on date seed
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
 // We can revalidate once a day so the verse changes daily
 export const revalidate = 86400; // 24 hours in seconds
 
 export async function GET(): Promise<Response> {
   try {
-    // 1. Determine which verse to show (day-based logic)
+    // 1. Generate a random verse ID that's consistent for the day
     const today = new Date();
-    const dayOfYear = getDayOfYear(today);
+    const dateString = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+    const seed = Array.from(dateString).reduce(
+      (acc, char) => acc + char.charCodeAt(0),
+      0
+    );
+
     const totalVerses = 6236;
-    const verseId = (dayOfYear % totalVerses) + 1;
+    // Use seeded random to get consistent verse for the day
+    const randomValue = seededRandom(seed);
+    const verseId = Math.floor(randomValue * totalVerses) + 1;
 
     // 2. Build the API endpoint. We'll request two editions in one go:
     //    - Arabic: ar.alafasy
@@ -63,7 +76,7 @@ export async function GET(): Promise<Response> {
     const englishData = json.data[1];
 
     // 6. Combine into a single JSON object with the fields you need
-    //    We’ll assume that juzz/page are the same for both (they should be).
+    //    We'll assume that juzz/page are the same for both (they should be).
     const combined = {
       verseId: arabicData.number, // global verse ID
       surahNumber: arabicData.surah.number,
