@@ -83,7 +83,7 @@ export function Hero() {
       <div className="container mx-auto">
         <div className="grid grid-cols-1 gap-8 items-center md:grid-cols-2">
           <div className="flex gap-4 flex-col">
-            <div>
+            <div className="pt-3">
               <Badge variant="outline">We&apos;re live!</Badge>
             </div>
             <div className="flex gap-4 flex-col">
