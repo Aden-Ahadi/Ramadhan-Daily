@@ -1,9 +1,8 @@
 "use client";
 import { useRef, useEffect, useState, useMemo } from "react";
-import { useSprings, animated, SpringValue, to } from "@react-spring/web";
+import { useSprings, animated, SpringValue } from "@react-spring/web";
 
 // Use proper type definition for animation states
-type AnimationStep = Record<string, SpringValue<any>>;
 type AnimationObject = {
   filter?: string | SpringValue<string>;
   opacity?: number | SpringValue<number>;

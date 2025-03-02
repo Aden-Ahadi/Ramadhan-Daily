@@ -3,12 +3,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Quote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import React from "react";
-import { ShimmerButton } from "@/components/magicui/shimmer-button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface VerseData {
@@ -60,14 +58,11 @@ export default function HomePage() {
   }
 
   const {
-    verseId,
-    surahNumber,
-    surahNameArabic,
     surahNameEnglish,
     verseNumberInSurah,
     juz,
     page,
-    revelationType,
+
     arabicText,
     englishText,
   } = data;

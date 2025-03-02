@@ -1,11 +1,5 @@
 "use client";
-import {
-  MoveRight,
-  PhoneCall,
-  ChevronDown,
-  ChevronUp,
-  Coffee,
-} from "lucide-react";
+import { MoveRight, ChevronDown, ChevronUp, Coffee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BlurText from "./BlurText";
@@ -16,7 +10,6 @@ import DailyVerse from "./DailyVerse";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import Footer from "./Footer";
 
 export function Hero() {
   const theme = useTheme();
@@ -122,7 +115,7 @@ export function Hero() {
                 </AuroraText>
                 ? Dive into a world where everyday feels like a celebration.
                 <br />
-                Let's make this{" "}
+                Let&apos;s make this{" "}
                 <LineShadowText
                   className="italic text-balance text-xl font-semibold leading-none tracking-tighter sm:text-2xl md:text-2xl"
                   shadowColor={shadowColor}
@@ -168,7 +161,7 @@ export function Hero() {
             <div className="bg-muted rounded-md p-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                  Today's Salah Times
+                  Today&apos;s Salah Times
                 </h2>
                 <Button
                   variant="ghost"

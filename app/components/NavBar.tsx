@@ -8,7 +8,6 @@ import {
   Moon,
   Sun,
   ArrowUpRight,
-  BookOpen,
   House,
   Coffee,
   HandCoins,

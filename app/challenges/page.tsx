@@ -146,7 +146,7 @@ export default function ChallengesPage() {
         <Card className="mb-8">
           <CardContent className="p-6">
             <h2 className="text-xl font-semibold mb-4">
-              Today's Accepted Challenges
+              Today&apos;s Accepted Challenges
             </h2>
             <div className="space-y-4">
               {acceptedChallenges.map((challenge) => (
@@ -182,7 +182,8 @@ export default function ChallengesPage() {
           <Lock className="h-4 w-4" />
           <AlertTitle>Daily limit reached</AlertTitle>
           <AlertDescription>
-            You've accepted 3 challenges today. Come back tomorrow for more!
+            You&apos;ve accepted 3 challenges today. Come back tomorrow for
+            more!
           </AlertDescription>
         </Alert>
       ) : (
