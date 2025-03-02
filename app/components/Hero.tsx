@@ -1,5 +1,5 @@
 "use client";
-import { MoveRight, PhoneCall } from "lucide-react";
+import { MoveRight, PhoneCall, ChevronDown, ChevronUp, Coffee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BlurText from "./BlurText";
@@ -9,29 +9,36 @@ import { useTheme } from "next-themes";
 import DailyVerse from "./DailyVerse";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Hero() {
   const theme = useTheme();
   const shadowColor = theme.resolvedTheme === "dark" ? "white" : "black";
 
-  const [maghribTime, setMaghribTime] = useState<string | null>(null);
+  const [prayerTimes, setPrayerTimes] = useState<Record<string, string> | null>(null);
   const [countdown, setCountdown] = useState<string>("Fetching...");
+  const [showSalahTimes, setShowSalahTimes] = useState<boolean>(false); // State to control visibility
 
-  // Function to get user location and fetch Maghrib prayer time
-  useEffect(() => {
-    const fetchPrayerTimes = async (latitude: number, longitude: number) => {
-      try {
-        const response = await fetch(
-          `https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=2`
-        );
-        const data = await response.json();
-        const maghrib = data.data.timings.Maghrib;
-        setMaghribTime(maghrib);
-      } catch (error) {
-        console.error("Error fetching prayer times:", error);
+  // Fetch prayer times based on geolocation
+  const fetchPrayerTimes = async (latitude: number, longitude: number) => {
+    try {
+      const response = await fetch(
+        `https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=2`
+      );
+      const data = await response.json();
+      if (data?.data?.timings) {
+        setPrayerTimes(data.data.timings);
+      } else {
+        throw new Error("Invalid prayer times data");
       }
-    };
+    } catch (error) {
+      console.error("Error fetching prayer times:", error);
+      setCountdown("Unable to fetch prayer times");
+    }
+  };
 
+  // Get geolocation and fetch prayer times
+  useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -48,40 +55,41 @@ export function Hero() {
     }
   }, []);
 
-  // Countdown Timer
+  // Countdown Timer for Maghrib
   useEffect(() => {
-    if (!maghribTime) return;
+    if (!prayerTimes || !prayerTimes.Maghrib) return;
 
     const updateCountdown = () => {
       const now = new Date();
-      const [hours, minutes] = maghribTime.split(":").map(Number);
+      const [hours, minutes] = prayerTimes.Maghrib.split(":").map(Number);
       const maghribDate = new Date();
       maghribDate.setHours(hours, minutes, 0, 0);
 
-      const timeDiff = maghribDate.getTime() - now.getTime();
+      let timeDiff = maghribDate.getTime() - now.getTime();
 
-      if (timeDiff > 0) {
-        const hoursLeft = Math.floor(timeDiff / (1000 * 60 * 60));
-        const minutesLeft = Math.floor(
-          (timeDiff % (1000 * 60 * 60)) / (1000 * 60)
-        );
-        const secondsLeft = Math.floor((timeDiff % (1000 * 60)) / 1000);
-        setCountdown(`${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`);
-      } else {
-        setCountdown("It's Iftar time!");
+      // If Maghrib time has passed, calculate for the next day
+      if (timeDiff < 0) {
+        maghribDate.setDate(maghribDate.getDate() + 1);
+        timeDiff = maghribDate.getTime() - now.getTime();
       }
+
+      const hoursLeft = Math.floor(timeDiff / (1000 * 60 * 60));
+      const minutesLeft = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+      const secondsLeft = Math.floor((timeDiff % (1000 * 60)) / 1000);
+      setCountdown(`${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`);
     };
 
     updateCountdown();
     const interval = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(interval);
-  }, [maghribTime]);
+  }, [prayerTimes]);
 
   return (
-    <div className="w-full py-18 lg:py-39">
+    <div className="w-full py-18 lg:py-39 bg-custom-gradient">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 gap-8 items-center md:grid-cols-2">
+          {/* Left Side */}
           <div className="flex gap-4 flex-col">
             <div className="pt-3">
               <Badge variant="outline">We&apos;re live!</Badge>
@@ -114,16 +122,20 @@ export function Hero() {
               </p>
             </div>
 
-            <div className="flex flex-row gap-4">
-              <Button size="lg" className="gap-4" variant="outline">
-                btn <PhoneCall className="w-4 h-4" />
-              </Button>
-              <Link href="/challenges">
-                <Button size="lg" className="gap-4">
-                  challenges <MoveRight className="w-4 h-4" />
-                </Button>
-              </Link>
-            </div>
+           {/* Buttons */}
+<div className="flex flex-row gap-4">
+  <Link href="https://www.teaforturmeric.com/category/islamic-holidays/ramadan-recipes/" target="_blank" rel="noopener noreferrer">
+    <Button size="lg" className="gap-4" variant="outline">
+      Food Recipes <Coffee className="w-4 h-4" />
+    </Button>
+  </Link>
+  <Link href="/challenges">
+    <Button size="lg" className="gap-4">
+      Challenges <MoveRight className="w-4 h-4" />
+    </Button>
+  </Link>
+</div>
+
           </div>
 
           {/* Right Side Cards */}
@@ -136,6 +148,50 @@ export function Hero() {
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {countdown}
               </p>
+            </div>
+
+            {/* Salah Times Card */}
+            <div className="bg-muted rounded-md p-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                  Today's Salah Times
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSalahTimes((prev) => !prev)}
+                  className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-100"
+                >
+                  {showSalahTimes ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </Button>
+              </div>
+              {showSalahTimes && prayerTimes ? (
+                <AnimatePresence>
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {Object.entries(prayerTimes).map(([name, time]) => (
+                      <div key={name} className="flex justify-between">
+                        <span className="text-gray-700 dark:text-gray-300">{name}</span>
+                        <span className="text-gray-900 dark:text-white font-medium">{time}</span>
+                      </div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
+              ) : (
+                <p className="mt-4 text-gray-500">
+                  {showSalahTimes
+                    ? "Loading prayer times..."
+                    : "Click to reveal Salah times"}
+                </p>
+              )}
             </div>
 
             {/* Daily Verse Card */}
