@@ -3,13 +3,23 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, Moon, Sun, Calendar, BookOpen, Settings } from "lucide-react";
+import {
+  Menu,
+  Moon,
+  Sun,
+  ArrowUpRight,
+  BookOpen,
+  House,
+  Coffee,
+  HandCoins,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [open, setOpen] = useState(false);
 
   // Handle scroll effect
   useEffect(() => {
@@ -62,32 +72,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link
-              href="/calendar"
-              className="text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-            >
-              .
-            </Link>
-            <Link
-              href="/prayers"
-              className="text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-            >
-              .
-            </Link>
-            <Link
-              href="/quran"
-              className="text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-            >
-              .
-            </Link>
-            <Link
-              href="/duas"
-              className="text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-            >
-              .
-            </Link>
-          </nav>
+          <nav className="hidden md:flex items-center space-x-8"></nav>
 
           {/* Action Buttons */}
           <div className="flex items-center space-x-2">
@@ -103,22 +88,26 @@ export default function Navbar() {
             </Button>
 
             {/* Settings Button - Desktop */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hidden md:flex text-gray-700 dark:text-gray-200"
+            <Link
+              href="/iftar-connections"
+              className="text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
             >
-              <Settings size={20} />
-              <span className="sr-only">Settings</span>
-            </Button>
+              <Image
+                src="/iftar.png" // update with your icon's path
+                alt="iftar icon"
+                width={20} // adjust the size as needed
+                height={20} // adjust the size as needed
+              />
+            </Link>
 
             {/* Mobile Menu Button */}
-            <Sheet>
+            <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="md:hidden text-gray-700 dark:text-gray-200"
+                  onClick={() => setOpen(true)}
                 >
                   <Menu size={24} />
                   <span className="sr-only">Open menu</span>
@@ -127,39 +116,37 @@ export default function Navbar() {
               <SheetContent side="right" className="w-[250px] sm:w-[300px]">
                 <nav className="flex flex-col gap-4 mt-8">
                   <Link
-                    href="/calendar"
+                    href="/"
+                    onClick={() => setTimeout(() => setOpen(false), 205)}
                     className="flex items-center gap-2 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors py-2"
                   >
-                    <Calendar size={18} />
-                    <span>Calendar</span>
+                    <House size={18} />
+                    <span>Home</span>
                   </Link>
                   <Link
-                    href="/prayers"
+                    href="/challenges"
+                    onClick={() => setTimeout(() => setOpen(false), 200)}
                     className="flex items-center gap-2 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors py-2"
                   >
-                    <BookOpen size={18} />
-                    <span>Prayers</span>
+                    <ArrowUpRight size={18} />
+                    <span>Challenges</span>
                   </Link>
                   <Link
-                    href="/quran"
+                    href="https://www.teaforturmeric.com/category/islamic-holidays/ramadan-recipes/"
+                    onClick={() => setTimeout(() => setOpen(false), 200)}
+                    target="_blank"
                     className="flex items-center gap-2 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors py-2"
                   >
-                    <BookOpen size={18} />
-                    <span>Quran</span>
+                    <Coffee size={18} />
+                    <span>Recipes</span>
                   </Link>
                   <Link
-                    href="/duas"
+                    href="/Donate"
+                    onClick={() => setTimeout(() => setOpen(false), 200)}
                     className="flex items-center gap-2 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors py-2"
                   >
-                    <BookOpen size={18} />
-                    <span>Duas</span>
-                  </Link>
-                  <Link
-                    href="/settings"
-                    className="flex items-center gap-2 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors py-2"
-                  >
-                    <Settings size={18} />
-                    <span>Settings</span>
+                    <HandCoins size={18} />
+                    <span>Buy us Iftar.</span>
                   </Link>
                 </nav>
               </SheetContent>

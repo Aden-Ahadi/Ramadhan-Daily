@@ -1,5 +1,11 @@
 "use client";
-import { MoveRight, PhoneCall, ChevronDown, ChevronUp, Coffee } from "lucide-react";
+import {
+  MoveRight,
+  PhoneCall,
+  ChevronDown,
+  ChevronUp,
+  Coffee,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BlurText from "./BlurText";
@@ -10,12 +16,15 @@ import DailyVerse from "./DailyVerse";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import Footer from "./Footer";
 
 export function Hero() {
   const theme = useTheme();
   const shadowColor = theme.resolvedTheme === "dark" ? "white" : "black";
 
-  const [prayerTimes, setPrayerTimes] = useState<Record<string, string> | null>(null);
+  const [prayerTimes, setPrayerTimes] = useState<Record<string, string> | null>(
+    null
+  );
   const [countdown, setCountdown] = useState<string>("Fetching...");
   const [showSalahTimes, setShowSalahTimes] = useState<boolean>(false); // State to control visibility
 
@@ -74,7 +83,9 @@ export function Hero() {
       }
 
       const hoursLeft = Math.floor(timeDiff / (1000 * 60 * 60));
-      const minutesLeft = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+      const minutesLeft = Math.floor(
+        (timeDiff % (1000 * 60 * 60)) / (1000 * 60)
+      );
       const secondsLeft = Math.floor((timeDiff % (1000 * 60)) / 1000);
       setCountdown(`${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`);
     };
@@ -122,20 +133,23 @@ export function Hero() {
               </p>
             </div>
 
-           {/* Buttons */}
-<div className="flex flex-row gap-4">
-  <Link href="https://www.teaforturmeric.com/category/islamic-holidays/ramadan-recipes/" target="_blank" rel="noopener noreferrer">
-    <Button size="lg" className="gap-4" variant="outline">
-      Food Recipes <Coffee className="w-4 h-4" />
-    </Button>
-  </Link>
-  <Link href="/challenges">
-    <Button size="lg" className="gap-4">
-      Challenges <MoveRight className="w-4 h-4" />
-    </Button>
-  </Link>
-</div>
-
+            {/* Buttons */}
+            <div className="flex flex-row gap-4">
+              <Link
+                href="https://www.teaforturmeric.com/category/islamic-holidays/ramadan-recipes/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button size="lg" className="gap-4" variant="outline">
+                  Recipes <Coffee className="w-4 h-4" />
+                </Button>
+              </Link>
+              <Link href="/challenges">
+                <Button size="lg" className="gap-4">
+                  Challenges <MoveRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Right Side Cards */}
@@ -179,8 +193,12 @@ export function Hero() {
                   >
                     {Object.entries(prayerTimes).map(([name, time]) => (
                       <div key={name} className="flex justify-between">
-                        <span className="text-gray-700 dark:text-gray-300">{name}</span>
-                        <span className="text-gray-900 dark:text-white font-medium">{time}</span>
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {name}
+                        </span>
+                        <span className="text-gray-900 dark:text-white font-medium">
+                          {time}
+                        </span>
                       </div>
                     ))}
                   </motion.div>
