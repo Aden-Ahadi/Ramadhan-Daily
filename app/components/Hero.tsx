@@ -10,6 +10,7 @@ import DailyVerse from "./DailyVerse";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import MaghribTimer from "./MaghribTimer"; // Import the separated timer component
 
 export function Hero() {
   const theme = useTheme();
@@ -19,7 +20,7 @@ export function Hero() {
     null
   );
   const [countdown, setCountdown] = useState<string>("Fetching...");
-  const [showSalahTimes, setShowSalahTimes] = useState<boolean>(false); // State to control visibility
+  const [showSalahTimes, setShowSalahTimes] = useState<boolean>(false);
 
   // Fetch prayer times based on geolocation
   const fetchPrayerTimes = async (latitude: number, longitude: number) => {
@@ -57,38 +58,6 @@ export function Hero() {
     }
   }, []);
 
-  // Countdown Timer for Maghrib
-  useEffect(() => {
-    if (!prayerTimes || !prayerTimes.Maghrib) return;
-
-    const updateCountdown = () => {
-      const now = new Date();
-      const [hours, minutes] = prayerTimes.Maghrib.split(":").map(Number);
-      const maghribDate = new Date();
-      maghribDate.setHours(hours, minutes, 0, 0);
-
-      let timeDiff = maghribDate.getTime() - now.getTime();
-
-      // If Maghrib time has passed, calculate for the next day
-      if (timeDiff < 0) {
-        maghribDate.setDate(maghribDate.getDate() + 1);
-        timeDiff = maghribDate.getTime() - now.getTime();
-      }
-
-      const hoursLeft = Math.floor(timeDiff / (1000 * 60 * 60));
-      const minutesLeft = Math.floor(
-        (timeDiff % (1000 * 60 * 60)) / (1000 * 60)
-      );
-      const secondsLeft = Math.floor((timeDiff % (1000 * 60)) / 1000);
-      setCountdown(`${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`);
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-
-    return () => clearInterval(interval);
-  }, [prayerTimes]);
-
   return (
     <div className="w-full py-18 lg:py-39 bg-custom-gradient">
       <div className="container mx-auto">
@@ -125,7 +94,6 @@ export function Hero() {
                 unforgettable.
               </p>
             </div>
-
             {/* Buttons */}
             <div className="flex flex-row gap-4">
               <Link
@@ -148,14 +116,18 @@ export function Hero() {
           {/* Right Side Cards */}
           <div className="grid grid-cols-1 gap-8">
             {/* Iftar Countdown Timer Card */}
-            <div className="bg-muted rounded-md h-32 flex flex-col items-center justify-center p-4">
-              <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                Iftar Countdown
-              </p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {countdown}
-              </p>
-            </div>
+            {prayerTimes && prayerTimes.Maghrib ? (
+              <MaghribTimer maghribTime={prayerTimes.Maghrib} />
+            ) : (
+              <div className="bg-muted rounded-md h-32 flex flex-col items-center justify-center p-4">
+                <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                  Iftar Countdown
+                </p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {countdown}
+                </p>
+              </div>
+            )}
 
             {/* Salah Times Card */}
             <div className="bg-muted rounded-md p-6">
