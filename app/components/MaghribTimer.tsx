@@ -3,49 +3,114 @@
 import React, { useEffect, useState } from "react";
 
 interface MaghribTimerProps {
-  maghribTime: string;
+  maghribTime: string; // Iftar time in "HH:mm" format
+  fajrTime: string; // Fajr time in "HH:mm" format
 }
 
-const MaghribTimer: React.FC<MaghribTimerProps> = ({ maghribTime }) => {
-  const [countdown, setCountdown] = useState<string>("Fetching...");
+const MaghribTimer: React.FC<MaghribTimerProps> = ({
+  maghribTime,
+  fajrTime,
+}) => {
+  const [displayText, setDisplayText] = useState<string>("Fetching...");
 
   useEffect(() => {
-    if (!maghribTime) return;
+    if (!maghribTime || !fajrTime) return;
 
-    const updateCountdown = () => {
+    const updateTimer = () => {
       const now = new Date();
-      const [hours, minutes] = maghribTime.split(":").map(Number);
-      const maghribDate = new Date();
-      maghribDate.setHours(hours, minutes, 0, 0);
 
-      // If Maghrib time has passed, calculate for the next day
-      let timeDiff = maghribDate.getTime() - now.getTime();
-      if (timeDiff < 0) {
-        maghribDate.setDate(maghribDate.getDate() + 1);
-        timeDiff = maghribDate.getTime() - now.getTime();
+      // Parse Iftar (Maghrib) time for today
+      const [iftarHour, iftarMinute] = maghribTime.split(":").map(Number);
+      const iftarDate = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        iftarHour,
+        iftarMinute,
+        0,
+        0
+      );
+
+      // Parse Fajr time for today
+      const [fajrHour, fajrMinute] = fajrTime.split(":").map(Number);
+      let fajrDate = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        fajrHour,
+        fajrMinute,
+        0,
+        0
+      );
+
+      // If current time is past Iftar, Fajr is tomorrow
+      if (now >= iftarDate) {
+        fajrDate.setDate(fajrDate.getDate() + 1);
       }
 
-      const hoursLeft = Math.floor(timeDiff / (1000 * 60 * 60));
-      const minutesLeft = Math.floor(
-        (timeDiff % (1000 * 60 * 60)) / (1000 * 60)
+      // Define the end of the Iftar message period (21:00 hrs)
+      const iftarMessageEnd = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        21,
+        0,
+        0,
+        0
       );
-      const secondsLeft = Math.floor((timeDiff % (1000 * 60)) / 1000);
-      setCountdown(`${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`);
+
+      // Before Iftar: Countdown to Iftar
+      if (now < iftarDate) {
+        const diff = iftarDate.getTime() - now.getTime();
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        setDisplayText(`${hours}h ${minutes}m ${seconds}s until Iftar`);
+      }
+      // Between Iftar and 21:00 hrs: Iftar message
+      else if (now >= iftarDate && now < iftarMessageEnd) {
+        setDisplayText(
+          "🌙 Iftar Time! May your fast be accepted. Enjoy your meal!"
+        );
+      }
+      // Between 21:00 hrs and Fajr: Waiting for Suhoor message
+      else if (now >= iftarMessageEnd && now < fajrDate) {
+        setDisplayText("🌌 Night of Reflection: Waiting for Suhoor...");
+      }
+      // After Fajr: Reset countdown for next Iftar
+      else {
+        let nextIftar = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          iftarHour,
+          iftarMinute,
+          0,
+          0
+        );
+        if (now >= nextIftar) {
+          nextIftar.setDate(nextIftar.getDate() + 1);
+        }
+        const diff = nextIftar.getTime() - now.getTime();
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        setDisplayText(`${hours}h ${minutes}m ${seconds}s until Iftar`);
+      }
     };
 
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
     return () => clearInterval(interval);
-  }, [maghribTime]);
+  }, [maghribTime, fajrTime]);
 
   return (
     <div className="bg-muted rounded-md h-32 flex flex-col items-center justify-center p-4">
       <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
         Iftar Countdown
       </p>
-      <p className="text-2xl font-bold text-gray-900 dark:text-white">
-        {countdown}
+      <p className="mt-1 text-lg  text-center text-gray-800 dark:text-gray-100">
+        {displayText}
       </p>
     </div>
   );

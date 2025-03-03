@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import MaghribTimer from "./MaghribTimer"; // Import the separated timer component
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function Hero() {
   const theme = useTheme();
@@ -116,16 +117,20 @@ export function Hero() {
           {/* Right Side Cards */}
           <div className="grid grid-cols-1 gap-8">
             {/* Iftar Countdown Timer Card */}
-            {prayerTimes && prayerTimes.Maghrib ? (
-              <MaghribTimer maghribTime={prayerTimes.Maghrib} />
+            {prayerTimes && prayerTimes.Maghrib && prayerTimes.Fajr ? (
+              <MaghribTimer
+                maghribTime={prayerTimes.Maghrib}
+                fajrTime={prayerTimes.Fajr}
+              />
             ) : (
               <div className="bg-muted rounded-md h-32 flex flex-col items-center justify-center p-4">
                 <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                   Iftar Countdown
                 </p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {countdown}
-                </p>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[250px]" />
+                  <Skeleton className="h-4 w-[200px]" />
+                </div>
               </div>
             )}
 
