@@ -29,12 +29,27 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchDailyVerse() {
       try {
-        const res = await fetch("/api/dailyVerse");
-        if (!res.ok) {
-          throw new Error("Failed to fetch daily verse");
-        }
+        // Add cache-busting parameter with UTC date
+        const utcDateString = new Date().toISOString().split("T")[0];
+        const res = await fetch(`/api/dailyVerse?d=${utcDateString}`, {
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache, max-age=0",
+          },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch daily verse");
         const verse: VerseData = await res.json();
         setData(verse);
+
+        // Set up midnight refresh
+        const now = new Date();
+        const midnightUTC = new Date(now);
+        midnightUTC.setUTCHours(24, 0, 0, 0);
+        const msUntilMidnight = midnightUTC.getTime() - now.getTime();
+
+        const timer = setTimeout(fetchDailyVerse, msUntilMidnight);
+        return () => clearTimeout(timer);
       } catch (err: any) {
         setError(err.message);
       }
@@ -62,14 +77,13 @@ export default function HomePage() {
     verseNumberInSurah,
     juz,
     page,
-
     arabicText,
     englishText,
   } = data;
 
   return (
     <div>
-      <Card className="relative w-full  bg-muted/70 shadow-none border-none aspect-video">
+      <Card className="relative w-full bg-muted/70 shadow-none border-none aspect-video">
         <Quote className="absolute top-3 right-2 h-16 w-16 text-foreground/10 stroke-[1.5px]" />
         <CardHeader className="py-5">
           <div className="flex items-center gap-3 justify-between">
@@ -79,7 +93,7 @@ export default function HomePage() {
             >
               Daily Verse
             </Badge>
-            <div className="flex  gap-2 mr-14">
+            <div className="flex gap-2 mr-14">
               {juz && (
                 <Badge
                   variant="secondary"
