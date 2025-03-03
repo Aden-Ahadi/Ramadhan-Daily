@@ -139,14 +139,14 @@ export default function Navbar() {
                     <Coffee size={18} />
                     <span>Recipes</span>
                   </Link>
-                  <Link
+                  {/*<Link
                     href="/Donate"
                     onClick={() => setTimeout(() => setOpen(false), 200)}
                     className="flex items-center gap-2 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors py-2"
                   >
                     <HandCoins size={18} />
                     <span>Buy us Iftar.</span>
-                  </Link>
+                  </Link> */}
                 </nav>
               </SheetContent>
             </Sheet>
