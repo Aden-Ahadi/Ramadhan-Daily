@@ -46,7 +46,7 @@ const MaghribTimer: React.FC<MaghribTimerProps> = ({
       // Different messages based on which day of Eid it is
       if (eidDay === 1) {
         setDisplayText(
-          "Pro tip: If your mama says ‘kula kidogo!’, smile… then sneak a third plate of biriyani. 😎🍛 Eid Mubarak 😂!”"
+          "Pro tip: If your mama says ‘kula kidogo!’, smile… then sneak a third plate of biriyani.😎 Eid Mubarak 😁!”"
         );
       } else if (eidDay === 2) {
         setDisplayText(
